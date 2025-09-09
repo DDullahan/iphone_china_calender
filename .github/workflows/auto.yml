@@ -5,15 +5,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.x'
-    - run: pip install -r requirements.txt
-    - run: python run.py
-    - uses: EndBug/add-and-commit@v9
-      with:
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - run: pip install -r requirements.txt
+      - run: python run.py
+      - uses: EndBug/add-and-commit@v9
+        with:
           author_name: DDullahan
           author_email: DDullahan@163.com
           message: 'Auto Commit'
