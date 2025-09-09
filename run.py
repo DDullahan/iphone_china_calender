@@ -5,7 +5,8 @@ from ics import Calendar, Event
 
 def festival_events():
     current_year = datetime.now().year
-    care_festival_name = ['元宵节', '情人节', '妇女节',   '愚人节', '清明','劳动节','元旦','除夕','春节','母亲节','端午节','儿童节','父亲节','七夕节', '中元节','国庆节','万圣节','圣诞节','平安夜']
+    ## 仅包含节日，假日从假日日历中补充
+    care_festival_name = ['元宵节', '情人节', '妇女节', '愚人节','母亲节','儿童节','父亲节','七夕节', '中元节','万圣节','圣诞节','平安夜']
     care_festival_event = []
     festival_json_url = f"https://raw.githubusercontent.com/zqzess/openApiData/refs/heads/main/calendar_new/{current_year}/{current_year}.json"
     festival_json = requests.get(festival_json_url).json()
@@ -19,8 +20,6 @@ def festival_events():
                     e.make_all_day()
                     care_festival_event.append(e)
     return care_festival_event
-
-
 
 
 def main():
