@@ -19,7 +19,6 @@ def festival_events():
                 if festival_info['name'] in care_festival_name:
                     date = datetime.fromtimestamp(int(entry['timestamp']))
                     e = Event(name=festival_info['name'], begin=date, end=date)
-                    e.make_all_day()
                     care_festival_event.append(e)
     return care_festival_event
 
@@ -32,6 +31,9 @@ def main():
     events = festival_events()
     for event in events:
         calendar.events.add(event)
+
+    for e in calendar.events:
+        e.make_all_day()
 
     with open('holiday_festival_cal.ics', 'w', encoding='utf-8') as f:
         f.writelines(calendar.serialize_iter())
