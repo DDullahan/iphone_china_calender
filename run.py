@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from ics import Calendar, Event
 
 
@@ -17,7 +17,7 @@ def festival_events():
         for entry in month.get('almanac'):
             for festival_info in entry.get('festivalInfoList', []):
                 if festival_info['name'] in care_festival_name:
-                    date = datetime.fromtimestamp(int(entry['timestamp']))
+                    date = datetime.fromtimestamp(int(entry['timestamp']), tz=timezone(timedelta(hours=8)))
                     e = Event(name=festival_info['name'], begin=date, end=date)
                     care_festival_event.append(e)
     return care_festival_event
