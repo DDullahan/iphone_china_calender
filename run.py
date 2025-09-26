@@ -32,9 +32,6 @@ def main():
     for event in events:
         calendar.events.add(event)
 
-    for e in calendar.events:
-        e.make_all_day()
-
     with open('holiday_festival_cal.ics', 'w', encoding='utf-8') as f:
         f.writelines(calendar.serialize_iter())
 
