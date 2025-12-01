@@ -4,10 +4,12 @@ from ics import Calendar, Event
 
 
 ## 节日日历，包含当年及下一年的节日
-## 如果假日日历中已经包含的节日，维护时需要注意不要在此处添加
+
 def festival_events():
     current_year = datetime.now().year
     next_year = datetime.now().year + 1
+
+    ## 如果假日日历中已经包含的节日，维护时需要注意不要在此处添加
     care_festival_name = ['元宵节', '情人节', '妇女节', '愚人节', '母亲节', '儿童节', '父亲节', '七夕节', '中元节',
                           '万圣节', '圣诞节', '平安夜']
     care_festival_event = []
@@ -26,12 +28,19 @@ def festival_events():
     return care_festival_event
 
 
-## 假日日历格式整理，清楚所有补班的alarm提醒，并设置为全天日程，防止UTC时间漂移
+## 假日日历格式整理
 def holiday_events_fixup(events):
     for event in events:
+        # 清除所有补班的alarm提醒
         event.alarms = []
+
+        # 设置为全天日程，防止UTC时间漂移
         event.make_all_day()
 
+        # 日历标题简化，提示班or休
+        name = event.name.split(' ')
+        new_name = ('(班)' if name[1] == '补班' else '(休)') +name[0]
+        event.name = new_name
 
 def main():
     holiday_ics_url = 'https://raw.githubusercontent.com/lanceliao/china-holiday-calender/refs/heads/master/holidayCal.ics'
