@@ -3,11 +3,13 @@ from datetime import datetime, timezone, timedelta
 from ics import Calendar, Event
 
 
+## 节日日历，包含当年及下一年的节日
+## 如果假日日历中已经包含的节日，维护时需要注意不要在此处添加
 def festival_events():
     current_year = datetime.now().year
     next_year = datetime.now().year + 1
-    care_festival_name = ['元宵节', '情人节', '妇女节', '愚人节', '清明', '劳动节', '元旦', '除夕', '春节', '母亲节',
-                          '端午节', '儿童节', '父亲节', '七夕节', '中元节', '国庆节', '万圣节', '圣诞节', '平安夜']
+    care_festival_name = ['元宵节', '情人节', '妇女节', '愚人节', '母亲节', '儿童节', '父亲节', '七夕节', '中元节',
+                          '万圣节', '圣诞节', '平安夜']
     care_festival_event = []
     festival_json_url = f"https://raw.githubusercontent.com/zqzess/openApiData/refs/heads/main/calendar_new/{current_year}/{current_year}.json"
     next_festival_json_url = f"https://raw.githubusercontent.com/zqzess/openApiData/refs/heads/main/calendar_new/{next_year}/{next_year}.json"
@@ -19,14 +21,24 @@ def festival_events():
                 if festival_info['name'] in care_festival_name:
                     date = datetime.fromtimestamp(int(entry['timestamp']), tz=timezone(timedelta(hours=8)))
                     e = Event(name=festival_info['name'], begin=date, end=date)
+                    e.make_all_day()
                     care_festival_event.append(e)
     return care_festival_event
+
+
+## 假日日历格式整理，清楚所有补班的alarm提醒，并设置为全天日程，防止UTC时间漂移
+def holiday_events_fixup(events):
+    for event in events:
+        event.alarms = []
+        event.make_all_day()
 
 
 def main():
     holiday_ics_url = 'https://raw.githubusercontent.com/lanceliao/china-holiday-calender/refs/heads/master/holidayCal.ics'
 
     calendar = Calendar(requests.get(holiday_ics_url).text)
+
+    holiday_events_fixup(calendar.events)
 
     events = festival_events()
     for event in events:
