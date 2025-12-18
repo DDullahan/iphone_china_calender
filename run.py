@@ -1,6 +1,7 @@
 import requests
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 from ics import Calendar, Event
+from zoneinfo import ZoneInfo
 
 
 ## 节日日历，包含当年及下一年的节日
@@ -21,7 +22,7 @@ def festival_events():
         for entry in month.get('almanac'):
             for festival_info in entry.get('festivalInfoList', []):
                 if festival_info['name'] in care_festival_name:
-                    date = datetime.fromtimestamp(int(entry['timestamp']))
+                    date = datetime.fromtimestamp(int(entry['timestamp']),tz=ZoneInfo('Asia/Shanghai'))
                     e = Event(name=festival_info['name'], begin=date, end=date)
                     e.make_all_day()
                     care_festival_event.append(e)
