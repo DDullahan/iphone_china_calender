@@ -1,5 +1,7 @@
 import requests
 from datetime import datetime
+
+from arrow import Arrow
 from ics import Calendar, Event
 from zoneinfo import ZoneInfo
 
@@ -22,7 +24,8 @@ def festival_events():
         for entry in month.get('almanac'):
             for festival_info in entry.get('festivalInfoList', []):
                 if festival_info['name'] in care_festival_name:
-                    date = datetime.fromtimestamp(int(entry['timestamp']),tz=ZoneInfo('Asia/Shanghai'))
+                    ## 时区漂移+8小时
+                    date = datetime.fromtimestamp(int(entry['timestamp']) + 8*60*60)
                     e = Event(name=festival_info['name'], begin=date, end=date)
                     e.make_all_day()
                     care_festival_event.append(e)
